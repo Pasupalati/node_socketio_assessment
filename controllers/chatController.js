@@ -2,14 +2,18 @@ const { getChatRoom } = require('../models/chatRoomModel');
 
 const getChatHistory = async (req, res) => {
     if(!req.params || !req.params.roomId){
-        res.status(404).send('Provide Valid Room Id!!');
+        res.status(404).send('Provide valid roomId!!');
         return;
     }
     const { roomId } = req.params;
     try {
         const chatRoom = await getChatRoom(roomId);
         if (chatRoom) {
-            res.json(chatRoom.messages);
+            if(chatRoom.messages){
+                res.json(chatRoom.messages);
+            }else {
+                res.status(404).send("Chat history not found");
+            }
         } else {
             res.status(404).send('Room not found');
         }
